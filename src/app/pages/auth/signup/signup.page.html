@@ -1,0 +1,103 @@
+<ion-header [translucent]="true" mode="ios" class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Registro</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <div class="header">
+    <ion-title class="title">Bienvenido/a!</ion-title>
+    <p class="subTitle">Regístrate</p>    
+  </div>
+
+  <form [formGroup]="regForm" novalidate>
+    <div class="ion-padding">
+      <ion-item>
+        <ion-input formControlName="name" class="input" type="text" placeholder="Nombre"></ion-input>
+        <ion-icon name="person-outline"></ion-icon>
+      </ion-item>
+      <div *ngIf="this.regForm.controls?.['name'].touched && this.regForm.controls?.['name'].invalid">
+        <ion-text *ngIf="errorControl['name'].errors['required']">
+          <p class="text">El campo es obligatorio</p>
+        </ion-text>
+      </div>
+  
+      <ion-item>
+        <ion-input formControlName="surnames" class="input" type="text" placeholder="Apellidos"></ion-input>
+        <ion-icon name="person-outline"></ion-icon>
+      </ion-item>
+      <div *ngIf="this.regForm.controls?.['surnames'].touched && this.regForm.controls?.['surnames'].invalid">
+        <ion-text *ngIf="errorControl['surnames'].errors['required']">
+          <p class="text">El campo es obligatorio</p>
+        </ion-text>
+      </div>
+      
+      <ion-item>
+        <ion-select formControlName="genre" placeholder="Indique su género">
+          <ion-select-option value="hombre">Hombre</ion-select-option>
+          <ion-select-option value="mujer">Mujer</ion-select-option>
+        </ion-select>
+        <ion-icon name="accessibility-outline"></ion-icon>
+      </ion-item>
+      <div *ngIf="this.regForm.controls?.['genre'].touched && this.regForm.controls?.['genre'].invalid">
+        <ion-text *ngIf="errorControl['genre'].errors['required']">
+          <p class="text">El campo es obligatorio</p>
+        </ion-text>
+      </div>
+  
+      <ion-item>
+        <ion-input formControlName="email" class="input" type="text" placeholder="Correo electrónico"></ion-input>
+        <ion-icon name="at-outline"></ion-icon>
+      </ion-item>
+      <div *ngIf="this.regForm.controls?.['email'].touched && this.regForm.controls?.['email'].invalid">
+        <ion-text *ngIf="errorControl['email'].errors['required']">
+          <p class="text">El campo es obligatorio</p>
+        </ion-text>
+        <ion-text *ngIf="errorControl['email'].errors['pattern']">
+          <p class="text">El campo tiene un formato no válido</p>
+        </ion-text>
+      </div>
+  
+      <ion-item>
+        <ion-input formControlName="password" class="input" type="password" placeholder="Contraseña"></ion-input>
+        <ion-icon name="lock-closed-outline"></ion-icon>
+      </ion-item>
+      <div *ngIf="this.regForm.controls?.['password'].touched && this.regForm.controls?.['password'].invalid">
+        <ion-text *ngIf="errorControl['password'].errors['required']">
+          <p class="text">El campo es obligatorio</p>
+        </ion-text>
+        <ion-text *ngIf="errorControl['password'].errors['pattern']">
+          <p class="text">El campo debe contener al menos: Una letra mayúscula, un número, un caracter especial y debe tener una longitud mínima de 8 digitos.</p>
+        </ion-text>
+      </div>
+  
+      <ion-item>
+        <ion-input formControlName="confirmPassword" class="input" type="password" placeholder="Confirmar contraseña"></ion-input>
+        <ion-icon name="lock-closed-outline"></ion-icon>
+      </ion-item>
+      <div *ngIf="this.regForm.controls?.['confirmPassword'].touched && this.regForm.controls?.['confirmPassword'].invalid">
+        <ion-text *ngIf="errorControl['confirmPassword'].errors['required']">
+          <p class="text">El campo es obligatorio</p>
+        </ion-text>
+        <ion-text *ngIf="errorControl['confirmPassword'].errors['pattern']">
+          <p class="text">El campo debe contener al menos: Una letra mayúscula, un número, un caracter especial y debe tener una longitud mínima de 8 digitos.</p>
+        </ion-text>
+        <ion-text *ngIf="errorControl['confirmPassword'].errors?.notEquivalent">
+          <p class="text">Las contraseñas no coinciden</p>
+        </ion-text>
+      </div>
+  
+      <div class="signinLink">
+        <p> ¿Ya tienes cuenta? <a [routerLink]="['/login']" style="color:#663399;">Inicia sesión</a> </p>
+      </div>
+    </div>
+  
+    <ion-fab vertical="bottom" horizontal="end" style="margin-bottom: 35px;" >
+      <ion-fab-button (click)="signUp()" color="tertiary">
+        <ion-icon name="chevron-forward"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+  </form>
+
+</ion-content>

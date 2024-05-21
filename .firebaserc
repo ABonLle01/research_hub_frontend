@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "auth-researchhub": {
+      "hosting": {
+        "app": [
+          "auth-researchhub"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "auth-researchhub"
+  }
+}

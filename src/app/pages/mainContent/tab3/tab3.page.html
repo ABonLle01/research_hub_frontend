@@ -1,0 +1,55 @@
+<ion-header [translucent]="true"  mode="ios" class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>
+      Encuestas Realizadas
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true"  mode="ios" class="ion-no-border">
+  <!-- <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large"></ion-title>
+    </ion-toolbar>
+  </ion-header> -->
+
+  <div class="bottom-buttons">
+    <ion-button (click)="logout()" expand="block" shape="round">
+      Cerrar Sesión
+    </ion-button>
+    
+    <!-- <ion-button (click)="try()" expand="block" shape="round">
+      Prueba usuario
+    </ion-button> -->
+  </div>
+
+  <ng-container *ngIf="currentUser" class="container">
+    <!-- Mostrar mensaje si el usuario no tiene encuestas realizadas -->
+    <ng-container *ngIf="surveys.length === 0">
+      <ion-card>
+        <ion-card-content>
+          <p>No has realizado ninguna encuesta aún.</p>
+        </ion-card-content>
+      </ion-card>
+    </ng-container>
+
+    <!-- Mostrar la lista de encuestas realizadas si el usuario tiene encuestas -->
+    <ion-list lines="full" *ngIf="surveys.length > 0">
+      <ion-item *ngFor="let survey of surveys">
+        <ion-label>
+          <h2>{{ survey.name }}</h2>
+          <p>Recompensa: {{ survey.reward }}</p>
+          <p>Fecha Realizada: {{ survey.fx_taken }}</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </ng-container>
+  
+    
+  
+
+
+</ion-content>
+
+  
+
