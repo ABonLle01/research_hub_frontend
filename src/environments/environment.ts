@@ -7,7 +7,7 @@ export const environment = {
   apiKey: '59d17dfeee304c029ba42c393a34e6c0',
   apiUrl: 'https://newsapi.org/v2',
 
-  apiRestUrl: 'http://localhost:3000/api/',
+  apiRestUrl: 'https://us-central1-auth-researchhub.cloudfunctions.net/api',
 
   // For Firebase JS SDK v7.20.0 and later, measurementId is optional
   firebaseConfig: {
