@@ -88,6 +88,21 @@ export class AuthenticationService {
     this.setCurrentUser(null);
   }
 
+  resetPassword(email: string, password: string): Observable<any> {
+    const body = { email, password };
+    return this.http.post<any>(`${this.apiRestUrl}user/reset-password`, body).pipe(
+      catchError((error: HttpErrorResponse) => {
+        let message = "Error al restablecer la contraseña";
+        if (error.status === 404) {
+          message = "El usuario no existe";
+        } else if (error.status === 400) {
+          message = "Parámetros inválidos";
+        }
+        return throwError(() => new Error(message));
+      })
+    );
+  }
+  
   private handleError(error: HttpErrorResponse) {
     console.error('Error en la solicitud:', error);
     if (error.error instanceof ErrorEvent) {
