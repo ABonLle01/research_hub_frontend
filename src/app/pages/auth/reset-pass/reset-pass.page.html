@@ -1,7 +1,7 @@
 <ion-content [fullscreen]="true">
 
   <div class="header">
-    <ion-title class="title">Escribe tu correo</ion-title>
+    <ion-title class="title">Completa los campos</ion-title>
     <p class="subTitle">Para cambiar tu contraseña</p>
   </div>
 
@@ -48,7 +48,7 @@
       </div>
 
       <ion-fab vertical="bottom" horizontal="end" style="margin-bottom: 30px;">
-        <ion-fab-button type="submit" color="tertiary">
+        <ion-fab-button (click)="resetPassword()" color="tertiary">
           <ion-icon name="chevron-forward"></ion-icon>
         </ion-fab-button>
       </ion-fab>

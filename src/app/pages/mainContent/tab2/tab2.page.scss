@@ -1,0 +1,15 @@
+.contextMenu{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    
+    h1{
+        font-weight: bold;
+        color: black;
+    }
+}
+
+.text{
+    color: var(--ion-color-danger, #f53d3d) !important;
+}

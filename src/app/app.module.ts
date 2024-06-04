@@ -20,13 +20,16 @@ import { environment } from 'src/environments/environment';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 
+import { ReactiveFormsModule } from '@angular/forms';
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
     BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule, 
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireAuthModule, 
-    MatTableModule, MatPaginatorModule
+    MatTableModule, MatPaginatorModule,
+    ReactiveFormsModule
   ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     InAppBrowser, SocialSharing,

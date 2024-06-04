@@ -21,3 +21,12 @@ ion-item{
         font-size: 2rem;
     }
 }
+
+.text{
+    display: flex;
+    justify-content: left;
+
+    font-size: smaller;
+    margin-left: 20px;
+    color: rgba(255, 0, 0, 0.5);
+}

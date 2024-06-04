@@ -1,30 +1,21 @@
 <ion-header [translucent]="true"  mode="ios" class="ion-no-border">
   <ion-toolbar>
-    <ion-title>
+    <ion-title *ngIf="!authService.isUserAdmin()">
       Encuestas Realizadas
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true"  mode="ios" class="ion-no-border">
-  <!-- <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large"></ion-title>
-    </ion-toolbar>
-  </ion-header> -->
 
-  <div class="bottom-buttons">
-    <ion-button (click)="logout()" expand="block" shape="round">
-      Cerrar Sesión
-    </ion-button>
-    
-    <!-- <ion-button (click)="try()" expand="block" shape="round">
-      Prueba usuario
-    </ion-button> -->
-  </div>
+  <ng-container *ngIf="currentUser && !authService.isUserAdmin()"  class="container">
 
-  <ng-container *ngIf="currentUser" class="container">
-    <!-- Mostrar mensaje si el usuario no tiene encuestas realizadas -->
+    <div class="bottom-buttons">
+      <ion-button (click)="logout()" expand="block" shape="round">
+        Cerrar Sesión
+      </ion-button>
+    </div>
+
     <ng-container *ngIf="surveys.length === 0">
       <ion-card>
         <ion-card-content>
@@ -33,7 +24,6 @@
       </ion-card>
     </ng-container>
 
-    <!-- Mostrar la lista de encuestas realizadas si el usuario tiene encuestas -->
     <ion-list lines="full" *ngIf="surveys.length > 0">
       <ion-item *ngFor="let survey of surveys">
         <ion-label>
@@ -45,7 +35,80 @@
     </ion-list>
   </ng-container>
   
+
+  <ion-content *ngIf="authService.isUserAdmin()" class="formulario">
+
+    <div class="bottom-buttons">
+      <ion-button (click)="logout()" expand="block" shape="round">
+        Cerrar Sesión
+      </ion-button>
+    </div>
+
+    <form [formGroup]="regForm" novalidate>
+      <div class="ion-padding">
+        <ion-item>
+          <ion-input formControlName="name" class="input" type="text" placeholder="Nombre de la categoria"></ion-input>
+          <ion-icon name="person-outline"></ion-icon>
+        </ion-item>
+        <div *ngIf="this.regForm.controls?.['name'].touched && this.regForm.controls?.['name'].invalid">
+          <ion-text *ngIf="errorControl['name'].errors['required']">
+            <p class="text">El nombre es obligatorio</p>
+          </ion-text>
+        </div>
     
+        <ion-item>
+          <ion-input formControlName="parent" class="input" type="text" placeholder="Categoría padre"></ion-input>
+          <ion-icon name="return-up-back-outline"></ion-icon>
+        </ion-item>
+        <div *ngIf="this.regForm.controls?.['parent'].touched && this.regForm.controls?.['parent'].invalid"></div>
+        
+        <ion-item>
+          <ion-input formControlName="level" class="input" type="text" placeholder="Nivel de categoría"></ion-input>
+          <ion-icon name="analytics-outline"></ion-icon>
+        </ion-item>
+        <div *ngIf="this.regForm.controls?.['level'].touched && this.regForm.controls?.['level'].invalid">
+          <ion-text *ngIf="errorControl['level'].errors['pattern']">
+            <p class="text">El nivel debe ser un número entre 0 y 9</p>
+          </ion-text>
+          <ion-text *ngIf="errorControl['level'].errors['required']">
+            <p class="text">El nivel es obligatorio</p>
+          </ion-text>
+        </div>
+
+        <ion-item>
+          <ion-input formControlName="url_img" type="file" accept=".png, text/plain" (change)="openImagePicker($event)"></ion-input>
+        </ion-item>
+
+        <div *ngIf="this.regForm.controls?.['url_img'].touched && this.regForm.controls?.['url_img'].invalid">
+          <ion-text *ngIf="errorControl['url_img'].errors['required']">
+            <p class="text">La imagen es obligatoria</p>
+          </ion-text>
+          <ion-text *ngIf="errorControl['url_img'].errors['pattern']">
+            <p class="text">La imagen debe estar en formato png</p>
+          </ion-text>
+        </div>
+    
+        <ion-item>
+          <ion-input formControlName="url_survey" class="input" type="text" placeholder="Encuesta"></ion-input>
+          <ion-icon name="clipboard-outline"></ion-icon>
+        </ion-item>
+        <div *ngIf="this.regForm.controls?.['url_survey'].touched && this.regForm.controls?.['url_survey'].invalid"></div>
+    
+        <div *ngIf="categoryService.selectedCategory!=null" class="signinLink">
+          <p> ¿Quieres crear una nueva categoría? <br> <a (click)="clearForm()" style="color:secondary;">Pulsa aquí</a> </p>
+        </div>
+      </div>
+    
+      <ion-button *ngIf="categoryService.selectedCategory!=null" (click)="modifyCategory()" expand="block" shape="round" class="btn">
+        Modificar categoría
+      </ion-button>
+
+      <ion-button *ngIf="categoryService.selectedCategory==null" (click)="addCategory()" expand="block" shape="round" class="btn">
+        Agregar categoría
+      </ion-button>
+    </form>
+
+  </ion-content>
   
 
 

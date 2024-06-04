@@ -2,10 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CategoriesService } from 'src/app/services/categories.service';
 import { Category } from 'src/app/interfaces';
 import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
-import { Platform } from '@ionic/angular';
+import { ActionSheetController, AlertController, Platform } from '@ionic/angular';
 import { User } from 'src/app/interfaces';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { ToastController } from '@ionic/angular';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-tab2',
@@ -26,14 +28,16 @@ export class Tab2Page implements OnInit{
   public currentUser: User | null;
   
   constructor(
+    public router: Router,
     private categoriesService:CategoriesService,
     private iab: InAppBrowser,
     private platform: Platform, 
     public authService: AuthenticationService,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private actionSheetCtrl: ActionSheetController,
+    private alertCtrl: AlertController,
   ) {}
 
-  //TO FIX: Cuando se cambia de tab, el boton desaparece y el contenido no se muestra correctamente
 
   ngOnInit(){
     this.displayedCategories = [];
@@ -61,14 +65,14 @@ export class Tab2Page implements OnInit{
     
     if (childrenNames.length === 0) {
       const category = this.all_categories.find(category => category.name === name);
-      
       console.log("Has pulsado sobre la categoria "+ category.name +" con el id "+category._id)
-
 
       if(category.url_survey){
         this.selectedSurvey = category;
-        this.confirmSurvey();
-        //todo: si selected survey ya existe en el usuario, no se hace la funcion
+        if(!this.authService.isUserAdmin()){
+          this.confirmSurvey();
+        }
+        
       }else{
         const message = `No hay encuestas disponibles para ${category.name} por el momento.`
         this.presentToast(message, 'bottom', "warning");
@@ -127,6 +131,77 @@ export class Tab2Page implements OnInit{
     });
 
     await toast.present();
+  }
+
+  async onOpenMenu(event: Event, category: Category) {
+    event.stopPropagation(); 
+
+    const actionSheet = await this.actionSheetCtrl.create({
+      header: 'Opciones',
+      buttons: [
+        {
+          text: 'Editar',
+          icon: 'create-outline',
+          handler: () => this.editCategory(category)
+        },
+        {
+          text: 'Eliminar',
+          icon: 'trash-outline',
+          role: 'destructive',
+          handler: () => this.confirmDeleteCategory(category)
+        },
+        {
+          text: 'Cancelar',
+          icon: 'close-outline',
+          role: 'cancel'
+        }
+      ]
+    });
+
+    await actionSheet.present();
+  }
+
+  editCategory(category: Category) {
+    this.categoriesService.selectedCategory = null;
+    console.log('Editar categoría:', category);
+    this.categoriesService.selectedCategory = category;
+    this.router.navigate(['/tabs/tab3'], { state: { category: category } });
+  }
+
+
+  async confirmDeleteCategory(category: Category) {
+    const alert = await this.alertCtrl.create({
+      header: 'Confirmar Eliminación',
+      message: `¿Estás seguro de que deseas eliminar la categoría ${category.name}?`,
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary'
+        },
+        {
+          text: 'Eliminar',
+          handler: () => this.deleteCategory(category)
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  deleteCategory(category: Category) {
+    this.categoriesService.deleteCategory(category._id).subscribe({
+      next: async () => {
+        console.log("Categoria eliminada:", category.name);
+        this.all_categories = this.all_categories.filter(cat => cat._id !== category._id);
+        this.displayedCategories = this.displayedCategories.filter(cat => cat._id !== category._id);
+        await this.presentToast('Categoría eliminada exitosamente', 'bottom', 'success');
+      },
+      error: async (error) => {
+        console.error('Error al eliminar categoría:', error);
+        await this.presentToast(error.message, 'bottom', 'danger');
+      }
+    });
   }
 
 }

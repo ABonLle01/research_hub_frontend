@@ -5,21 +5,22 @@ import { ArticleComponent } from './article/article.component';
 import { ArticlesComponent } from './articles/articles.component';
 import { CategoriesComponent } from './categories/categories.component';
 import { CategoryComponent } from './category/category.component';
-
+import { ContextMenuComponent } from './context-menu/context-menu.component';
 
 @NgModule({
   declarations: [
     ArticleComponent,
     ArticlesComponent,
     CategoriesComponent,
-    CategoryComponent
+    CategoryComponent,
+    ContextMenuComponent
   ],
   imports: [
     CommonModule,
     IonicModule,
   ],
   exports: [
-    ArticlesComponent, ArticleComponent, CategoriesComponent, CategoryComponent
+    ArticlesComponent, ArticleComponent, CategoriesComponent, CategoryComponent, ContextMenuComponent
   ]
 })
 export class ComponentsModule { }

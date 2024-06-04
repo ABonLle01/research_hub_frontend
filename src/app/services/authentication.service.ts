@@ -17,7 +17,8 @@ import { User } from '../interfaces';
 export class AuthenticationService {
   private apiRestUrl = environment.apiRestUrl;
   private currentUser: BehaviorSubject<User | null>;
-  
+  private isAdmin:boolean=false;
+
   constructor(private http: HttpClient) { 
     this.currentUser = new BehaviorSubject<User | null>(null);
   }
@@ -30,7 +31,15 @@ export class AuthenticationService {
   setCurrentUser(user: User | null): void {
     this.currentUser.next(user);
   }
+  
 
+  isUserAdmin():boolean{
+    return this.isAdmin;
+  }
+  
+  private setAdminStatus(status:boolean):void{
+    this.isAdmin=status;
+  }
 
   getUser(): Observable<any> {
     return this.currentUser.pipe(
@@ -66,8 +75,15 @@ export class AuthenticationService {
 
   loginUser(email: string, password: string): Observable<any> {
     console.log("body - (loginUser):", email, password);
+    
+    if(email=='prueba@admin.com' && password=='Password@1' ){
+      console.log("admin detected!");
+      this.setAdminStatus(true);
+    } else {
+      this.setAdminStatus(false);
+    }
 
-    return this.http.get<HttpResponse<any>>(`${this.apiRestUrl}user/login/?email=${email}&password=${password}`, { observe: 'response' }).pipe(
+    const user = this.http.get<HttpResponse<any>>(`${this.apiRestUrl}user/login/?email=${email}&password=${password}`, { observe: 'response' }).pipe(
       catchError((error: HttpErrorResponse) => {
         let message:string ="";
         
@@ -82,10 +98,13 @@ export class AuthenticationService {
         return throwError(()=> new Error(message));
       })
     );
+
+    return user;
   }
 
   logoutUser(): void {
     this.setCurrentUser(null);
+    this.isAdmin=false;
   }
 
   resetPassword(email: string, password: string): Observable<any> {
